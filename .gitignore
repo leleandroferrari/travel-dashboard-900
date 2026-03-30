@@ -1,0 +1,13 @@
+# Temporary files
+.tmp/
+
+# Environment variables and API keys
+.env
+credentials.json
+token.json
+
+# Python virtual environment and caching
+__pycache__/
+*.pyc
+venv/
+.venv/
