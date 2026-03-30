@@ -38,7 +38,7 @@ function mapGuestToRow(guest: GuestFormData): string[] {
   ];
 }
 
-export async function getGuests(): Promise<Guest[]> {
+export async function getGuests() {
   try {
     const sheets = await getGoogleSheetsClient();
     const response = await sheets.spreadsheets.values.get({
@@ -57,7 +57,7 @@ export async function getGuests(): Promise<Guest[]> {
       .filter((g) => g.name !== '');
   } catch (error) {
     console.error("Error fetching guests:", error);
-    return [];
+    return { error: String(error) };
   }
 }
 

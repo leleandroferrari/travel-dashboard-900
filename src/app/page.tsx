@@ -4,7 +4,21 @@ import { DashboardClient } from './DashboardClient';
 export const dynamic = 'force-dynamic';
 
 export default async function Dashboard() {
-  const guests = await getGuests();
+  const result = await getGuests();
+
+  if ('error' in result) {
+    return (
+      <div className="flex-1 p-4 md:p-8">
+        <div className="bg-red-50 border border-red-200 text-red-800 p-6 rounded-2xl mb-8">
+          <h2 className="text-xl font-bold mb-2">Google Sheets Connection Error</h2>
+          <p className="font-mono text-sm bg-white/50 p-4 rounded-xl border border-red-100">{result.error}</p>
+          <p className="mt-4 text-sm font-medium">Please check your Vercel Environment Variables: GOOGLE_OAUTH_CREDENTIALS and GOOGLE_OAUTH_TOKEN.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const guests = result;
 
   // Calculate Metrics safely
   let arrivalsToday = 0;
@@ -16,8 +30,6 @@ export default async function Dashboard() {
       if (g.status === 'Arriving') arrivalsToday++;
       if (g.status === 'Departed') departuresToday++;
       if (g.status === 'In-House') inHouse++;
-      // If we strictly wanted "isToday(parseISO(g.arrivalDate))", we'd do that. 
-      // But status seems to be the primary metric source per brief.
     } catch {
       // ignore parse errors
     }
